@@ -15,6 +15,19 @@ def get_factory_func(field):
     )
 
 
+def get_random_value(field):
+    """
+    Calls the dispatch method (``get_factory_func``) and passes the field
+    obj argument to the callable returned.
+
+    Returns:
+        random value depending on field type and constraints in the field
+            object
+    """
+    func = get_factory_func(field)
+    return func(field)
+
+
 class FieldValue(object):
     @staticmethod
     def make_string_field_value(field):

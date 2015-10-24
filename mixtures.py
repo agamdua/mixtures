@@ -3,9 +3,11 @@ from __future__ import unicode_literals
 """
 MongoEngine fixtures
 """
+from functools import partial
+
 import mongoengine as mongo
 
-from field_values import get_factory_func
+from field_values import get_random_value
 
 
 def make_fixture(model_class, fixture_type='dict', **kwargs):
@@ -29,7 +31,9 @@ def make_fixture(model_class, fixture_type='dict', **kwargs):
 
     all_fields = get_fields(model_class)
 
-    fields_for_random_generation = [getattr(model_class, field) for field in all_fields]
+    fields_for_random_generation = map(
+        lambda x: getattr(model_class, x), all_fields
+    )
 
     overrides = {}
 
@@ -49,6 +53,9 @@ def make_fixture(model_class, fixture_type='dict', **kwargs):
     )
 
     return {k.name: v for k, v in values.items()}
+
+
+make_fixture_dict = partial(make_fixture, fixture_type='dict')
 
 
 def get_fields(model_class):
@@ -74,7 +81,7 @@ def get_random_values(fields):
 
     for field in fields:
         try:
-            value = get_factory_func(field)(field)  # random_value_mapper[field.__class__.__name__](field)
+            value = get_random_value(field)
         except AttributeError:
             # this can only really occur if the field is not implemented yet.
             # Silencing the exception during the prototype phase
