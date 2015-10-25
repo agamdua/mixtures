@@ -8,4 +8,8 @@ install:
   - pip install -r requirements/test.txt
 
 # command to run tests
-script: make test
+script:
+  make test
+
+after_success:
+  coveralls

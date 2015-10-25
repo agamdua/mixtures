@@ -1,6 +1,10 @@
 Mixtures - MongoEngine fixtures
 ===============================
 
+[![Build Status](https://travis-ci.org/agamdua/mixtures.svg?branch=develop)](https://travis-ci.org/agamdua/mixtures)
+[![Coverage Status](https://coveralls.io/repos/agamdua/mixtures/badge.svg?branch=develop&service=github)](https://coveralls.io/github/agamdua/mixtures?branch=develop)
+
+
 Super simple fixtures, pass in a model class and mixtures will do the rest
 by generating random data after introspecting the fields in the model class.
 
