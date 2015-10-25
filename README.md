@@ -30,11 +30,11 @@ class MongoModel(mongo.Document):
     overridden_field = mongo.StringField()
 	
 test_data = make_fixture(MongoModel, overridden_field='custom data')
+```
 
-
+```python
 >>> from pprint import pprint
 >>> pprint(test_data)
-pprint(test_data)
 {'created': u'2015-10-25 00:30:51.851405',
  'email': u'EAWESCHCVBXPJNJQKMDLZIETXVLQIOYQPYAKRWIMBJMGHTRQUZVCSFCFLEAINTXTLAQWTXTTYRRJUMEVHIBWNMYS@example.com',
  'flag': False,
@@ -53,6 +53,9 @@ Upcoming
 * Overriding fields with specifc data - when you do not want random data
 
 * stable API
+
+* Fields: https://github.com/agamdua/mixtures/issues/3
+
 
 
 Status
