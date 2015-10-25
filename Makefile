@@ -1,2 +1,2 @@
 test:
-	py.test -s .
+	py.test --cov=. -s .

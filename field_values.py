@@ -2,6 +2,8 @@ from __future__ import unicode_literals
 
 import random
 
+from collections import namedtuple
+from datetime import datetime
 from string import ascii_uppercase
 
 MAX_LENGTH = 100  # just for simplicity
@@ -28,9 +30,43 @@ def get_random_value(field):
     return func(field)
 
 
-class FieldValue(object):
-    @staticmethod
-    def make_string_field_value(field):
+class StringFieldMixin(object):
+    @classmethod
+    def get_string_inclusive_interval(cls, field, max_length=None):
+        if field.max_length is None:
+            field.max_length = max_length or MAX_LENGTH
+
+        if field.min_length is None:
+            field.min_length = 0
+
+        StringInterval = namedtuple('string_interval', ['start', 'end'])
+
+        return StringInterval(start=field.min_length, end=field.max_length)
+
+    @classmethod
+    def get_string_range(cls, field):
+        interval = cls.get_string_inclusive_interval(field)
+        return range(interval.start, interval.end)
+
+    @classmethod
+    def get_string_length(cls, field):
+        interval = cls.get_string_inclusive_interval(field)
+        return interval.end - interval.start
+
+    @classmethod
+    def get_random_string(cls, string_range):
+        return ''.join(
+            random.choice(ascii_uppercase) for i in string_range
+        )
+
+
+class FieldHelperMixin(StringFieldMixin):
+    pass
+
+
+class FieldValue(FieldHelperMixin):
+    @classmethod
+    def make_string_field_value(cls, field):
         """
         String Field has three constraints (apart from anything
         in the super class)
@@ -45,18 +81,23 @@ class FieldValue(object):
         if field.regex is not None:
             raise NotImplementedError
 
-        if field.max_length is None:
-            field.max_length = MAX_LENGTH
+        string_range = cls.get_string_range(field)
 
-        if field.min_length is None:
-            field.min_length = 0
+        return cls.get_random_string(string_range)
 
-        string_range = range(field.min_length, field.max_length)
+    @classmethod
+    def make_objectid_field_value(cls, field):
+        return unicode(random.randint(1, 10000))
 
-        return ''.join(
-            random.choice(ascii_uppercase) for i in string_range
+    @classmethod
+    def make_email_field_value(cls, field):
+        length = cls.get_string_length(field)
+        range_length = length - 12  # 12 is the length of "@example.com"
+
+        return "{}@example.com".format(
+            cls.get_random_string(range(range_length))
         )
 
-    @staticmethod
-    def make_objectid_field_value(field):
-        return unicode(random.randint(1, 10000))
+    @classmethod
+    def make_datetime_field_value(cls, field):
+        return unicode(datetime.now())
