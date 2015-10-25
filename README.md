@@ -22,12 +22,26 @@ import mongoengine as mongo
 from mixtures import make_fixture
 
 class MongoModel(mongo.Document):
-	foo = mongo.StringField(max_length=25)
+    flag = mongo.BooleanField()
+    created = mongo.DateTimeField()
+    email = mongo.EmailField()
+    foo = mongo.StringField()
+    name = mongo.StringField(max_length=25)
+    overridden_field = mongo.StringField()
 	
-test_data = make_fixture(MongoModel)
+test_data = make_fixture(MongoModel, overridden_field='custom data')
 
-print(test_data)
-{'foo': u'AZZQNMTKMOAQRVHGEJDUJITMD', 'id': u'1514'}
+
+>>> from pprint import pprint
+>>> pprint(test_data)
+pprint(test_data)
+{'created': u'2015-10-25 00:30:51.851405',
+ 'email': u'EAWESCHCVBXPJNJQKMDLZIETXVLQIOYQPYAKRWIMBJMGHTRQUZVCSFCFLEAINTXTLAQWTXTTYRRJUMEVHIBWNMYS@example.com',
+ 'flag': False,
+ 'foo': u'YZYYOEKJSVMHQLZOJKAURWMYWBHFQXYVXJZINGYBBVXPBEFGLYBVJTDKGGVNYQEVUSKJKYNTNERKKQOZLUUINLPDMXHXIYYEIMQY',
+ 'id': u'1727',
+ 'name': u'HVNFPOUXXFOBFADIORLQPUSFX',
+ 'overridden_field': 'custom data'}
 ```
 
 Upcoming

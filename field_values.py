@@ -1,6 +1,7 @@
 from __future__ import unicode_literals
 
 import random
+import six
 
 from collections import namedtuple
 from datetime import datetime
@@ -87,7 +88,7 @@ class FieldValue(FieldHelperMixin):
 
     @classmethod
     def make_objectid_field_value(cls, field):
-        return unicode(random.randint(1, 10000))
+        return six.text_type(random.randint(1, 10000))
 
     @classmethod
     def make_email_field_value(cls, field):
@@ -100,4 +101,8 @@ class FieldValue(FieldHelperMixin):
 
     @classmethod
     def make_datetime_field_value(cls, field):
-        return unicode(datetime.now())
+        return six.text_type(datetime.now())
+
+    @classmethod
+    def make_boolean_field_value(cls, field):
+        return random.choice((True, False))

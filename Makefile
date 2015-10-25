@@ -1,2 +1,7 @@
 test:
-	py.test --cov=. -s .
+	py.test --cov-report term-missing --cov=. -s .
+
+flake8:
+	flake8 .
+
+check: flake8 test

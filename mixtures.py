@@ -38,9 +38,10 @@ def make_fixture(model_class, fixture_type='dict', **kwargs):
     overrides = {}
 
     for kwarg, value in kwargs.items():
-        if kwargs in all_fields:
-            fields_for_random_generation.remove(kwarg)
-            overrides.update({kwarg: value})
+        if kwarg in all_fields:
+            kwarg_field = getattr(model_class, kwarg)
+            fields_for_random_generation.remove(kwarg_field)
+            overrides.update({kwarg_field: value})
 
     random_values = get_random_values(fields_for_random_generation)
 
@@ -51,7 +52,6 @@ def make_fixture(model_class, fixture_type='dict', **kwargs):
             len(all_fields), len(values)
         )
     )
-
     return {k.name: v for k, v in values.items()}
 
 

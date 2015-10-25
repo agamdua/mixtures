@@ -1,5 +1,3 @@
-import datetime
-
 import mongoengine as mongo
 import pytest
 
@@ -13,6 +11,9 @@ def mongo_document():
         foo = mongo.StringField()
         created = mongo.DateTimeField()
         email = mongo.EmailField()
+        name = mongo.StringField(max_length=25)
+        overridden_field = mongo.StringField()
+        flag = mongo.BooleanField()
 
     return DummyModel
 
@@ -29,12 +30,17 @@ def mixture_data(mongo_document, monkeypatch):
         'datetime',
         PatchDateTime,
     )
-    return make_fixture(mongo_document)
+    return make_fixture(mongo_document, overridden_field='override, woot')
+
+
+def test_overridden_field(mixture_data):
+    assert mixture_data['overridden_field'] == 'override, woot'
 
 
 def test_string_field_mixture(mixture_data):
     # we can only assert what we know about the random data
     assert len(mixture_data['foo']) == 100
+    assert len(mixture_data['name']) == 25
 
 
 def test_objectid_field_mixture(mixture_data):
@@ -49,3 +55,7 @@ def test_email_field_mixture(mixture_data):
     email = mixture_data['email']
     assert len(email) == 100
     assert len(email.split('@')[0]) == 88
+
+
+def test_boolean_field_mixture(mixture_data):
+    assert isinstance(mixture_data['flag'], bool)
