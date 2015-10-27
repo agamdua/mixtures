@@ -32,27 +32,11 @@ def get_random_value(field):
 
 
 class StringFieldMixin(object):
-    @classmethod
-    def get_string_inclusive_interval(cls, field, max_length=None):
-        if field.max_length is None:
-            field.max_length = max_length or MAX_LENGTH
-
-        if field.min_length is None:
-            field.min_length = 0
-
-        StringInterval = namedtuple('string_interval', ['start', 'end'])
-
-        return StringInterval(start=field.min_length, end=field.max_length)
-
-    @classmethod
-    def get_string_range(cls, field):
-        interval = cls.get_string_inclusive_interval(field)
-        return range(interval.start, interval.end)
 
     @classmethod
     def get_string_length(cls, field):
-        interval = cls.get_string_inclusive_interval(field)
-        return interval.end - interval.start
+        interval = cls.get_inclusive_interval(field)
+        return interval.stop - interval.start
 
     @classmethod
     def get_random_string(cls, string_range):
@@ -62,7 +46,36 @@ class StringFieldMixin(object):
 
 
 class FieldHelperMixin(StringFieldMixin):
-    pass
+    # TODO: rethink inheritance hierarchy, luckily this doesn't affect the
+    # user in any way
+    @classmethod
+    def get_value_based_inclusive_interval(cls, field, max_value=None):
+        if field.max_value is None:
+            field.max_value = max_value or MAX_LENGTH
+
+        if field.min_value is None:
+            field.min_value = 0
+
+        Interval = namedtuple('interval', ['start', 'stop'])
+
+        return Interval(start=field.min_value, stop=field.max_value)
+
+    @classmethod
+    def get_inclusive_interval(cls, field, max_length=None):
+        if field.max_length is None:
+            field.max_length = max_length or MAX_LENGTH
+
+        if field.min_length is None:
+            field.min_length = 0
+
+        Interval = namedtuple('interval', ['start', 'stop'])
+
+        return Interval(start=field.min_length, stop=field.max_length)
+
+    @classmethod
+    def get_range(cls, field):
+        interval = cls.get_inclusive_interval(field)
+        return range(interval.start, interval.stop)
 
 
 class FieldValue(FieldHelperMixin):
@@ -82,7 +95,7 @@ class FieldValue(FieldHelperMixin):
         if field.regex is not None:
             raise NotImplementedError
 
-        string_range = cls.get_string_range(field)
+        string_range = cls.get_range(field)
 
         return cls.get_random_string(string_range)
 
@@ -106,3 +119,8 @@ class FieldValue(FieldHelperMixin):
     @classmethod
     def make_boolean_field_value(cls, field):
         return random.choice((True, False))
+
+    @classmethod
+    def make_int_field_value(cls, field):
+        interval = cls.get_value_based_inclusive_interval(field)
+        return random.randrange(interval.start, interval.stop)

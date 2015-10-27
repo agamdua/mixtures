@@ -14,6 +14,8 @@ def mongo_document():
         name = mongo.StringField(max_length=25)
         overridden_field = mongo.StringField()
         flag = mongo.BooleanField()
+        age = mongo.IntField(min_value=5, max_value=35)
+        daily_ice_cream_capacity = mongo.IntField()
 
     return DummyModel
 
@@ -59,3 +61,9 @@ def test_email_field_mixture(mixture_data):
 
 def test_boolean_field_mixture(mixture_data):
     assert isinstance(mixture_data['flag'], bool)
+
+
+def test_int_field_mixture(mixture_data):
+    age = mixture_data['age']
+    assert isinstance(age, int)
+    assert 5 <= age <= 35
