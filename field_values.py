@@ -5,6 +5,7 @@ import six
 
 from collections import namedtuple
 from datetime import datetime
+from decimal import Decimal
 from string import ascii_uppercase
 
 MAX_LENGTH = 100  # just for simplicity
@@ -157,3 +158,7 @@ class FieldValue(FieldHelperMixin):
             during creation of the object in memory.
         """
         return []
+
+    @classmethod
+    def make_decimal_field_value(cls, field):
+        return Decimal(cls.make_int_field_value(field))
