@@ -16,6 +16,7 @@ def mongo_document():
         flag = mongo.BooleanField()
         age = mongo.IntField(min_value=5, max_value=35)
         daily_ice_cream_capacity = mongo.IntField()
+        favorites = mongo.ListField()
 
     return DummyModel
 
@@ -67,3 +68,9 @@ def test_int_field_mixture(mixture_data):
     age = mixture_data['age']
     assert isinstance(age, int)
     assert 5 <= age <= 35
+
+
+def test_list_field_mixture(mixture_data):
+    favorites = mixture_data['favorites']
+    assert isinstance(favorites, list)
+    assert favorites == []
