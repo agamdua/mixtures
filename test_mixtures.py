@@ -20,6 +20,7 @@ def mongo_document():
         daily_ice_cream_capacity = mongo.IntField()
         favorites = mongo.ListField()
         price = mongo.DecimalField(min_value=Decimal(6), max_value=Decimal(10))
+        byte = mongo.BinaryField(max_bytes=85)
 
     return DummyModel
 
@@ -83,3 +84,9 @@ def test_list_field_mixture(mixture_data):
     favorites = mixture_data['favorites']
     assert isinstance(favorites, list)
     assert favorites == []
+
+
+def test_binary_field_mixture(mixture_data):
+    byte = mixture_data['byte']
+    assert isinstance(byte, basestring)
+    assert len(byte) == 85

@@ -162,3 +162,12 @@ class FieldValue(FieldHelperMixin):
     @classmethod
     def make_decimal_field_value(cls, field):
         return Decimal(cls.make_int_field_value(field))
+
+    @classmethod
+    def make_binary_field_value(cls, field):
+        if field.max_bytes is not None:
+            stop = field.max_bytes
+        else:
+            stop = MAX_LENGTH
+
+        return cls.get_random_string(range(stop))
