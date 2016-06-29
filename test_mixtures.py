@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 import mongoengine as mongo
 import pytest
 
@@ -16,6 +18,9 @@ def mongo_document():
         flag = mongo.BooleanField()
         age = mongo.IntField(min_value=5, max_value=35)
         daily_ice_cream_capacity = mongo.IntField()
+        favorites = mongo.ListField()
+        price = mongo.DecimalField(min_value=Decimal(6), max_value=Decimal(10))
+        byte = mongo.BinaryField(max_bytes=85)
 
     return DummyModel
 
@@ -67,3 +72,21 @@ def test_int_field_mixture(mixture_data):
     age = mixture_data['age']
     assert isinstance(age, int)
     assert 5 <= age <= 35
+
+
+def test_decimal_field_mixture(mixture_data):
+    price = mixture_data['price']
+    assert isinstance(price, Decimal)
+    assert Decimal(6) <= price <= Decimal(10)
+
+
+def test_list_field_mixture(mixture_data):
+    favorites = mixture_data['favorites']
+    assert isinstance(favorites, list)
+    assert favorites == []
+
+
+def test_binary_field_mixture(mixture_data):
+    byte = mixture_data['byte']
+    assert isinstance(byte, basestring)
+    assert len(byte) == 85

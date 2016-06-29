@@ -5,6 +5,7 @@ import six
 
 from collections import namedtuple
 from datetime import datetime
+from decimal import Decimal
 from string import ascii_uppercase
 
 MAX_LENGTH = 100  # just for simplicity
@@ -50,6 +51,17 @@ class FieldHelperMixin(StringFieldMixin):
     # user in any way
     @classmethod
     def get_value_based_inclusive_interval(cls, field, max_value=None):
+        """
+        This is applicable to fields with max_value and min_value as
+        validators.
+
+        Note:
+            1. This is different from fields with max_length as a validator
+            2. This means that the two methods based on value and length
+                are almost the same method but for the max_* attribute
+                that is being checked. Probably need to DRY this out at
+                some point.
+        """
         if field.max_value is None:
             field.max_value = max_value or MAX_LENGTH
 
@@ -124,3 +136,38 @@ class FieldValue(FieldHelperMixin):
     def make_int_field_value(cls, field):
         interval = cls.get_value_based_inclusive_interval(field)
         return random.randrange(interval.start, interval.stop)
+
+    @classmethod
+    def make_list_field_value(cls, field):
+        """
+        The default behavior of mongoengine is to store an empty list,
+        this just mimics that.
+
+        What it looks like is that the default is not created while
+        the object is instantiated, the default is actually created
+        later on in the process.
+
+        Since this library makes no assumptions about what you want
+        to do with the mongo model object this function is provided
+        to "force" a default value before one ever worries about
+        actually hitting mongo.
+
+        TODO:
+            Should really look into at what point the defaults are
+            applied in case there's a good reason this is not done
+            during creation of the object in memory.
+        """
+        return []
+
+    @classmethod
+    def make_decimal_field_value(cls, field):
+        return Decimal(cls.make_int_field_value(field))
+
+    @classmethod
+    def make_binary_field_value(cls, field):
+        if field.max_bytes is not None:
+            stop = field.max_bytes
+        else:
+            stop = MAX_LENGTH
+
+        return cls.get_random_string(range(stop))

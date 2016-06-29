@@ -4,4 +4,4 @@ test:
 flake8:
 	flake8 .
 
-check: flake8 test
+ready: flake8 test
