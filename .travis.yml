@@ -11,7 +11,7 @@ install:
 
 # command to run tests
 script:
-  make check
+  make ready
 
 after_success:
   coveralls
