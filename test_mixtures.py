@@ -9,6 +9,11 @@ from mixtures import make_fixture
 
 @pytest.fixture(scope="module")
 def mongo_document():
+    class DummyEmbeddedDoc(mongo.EmbeddedDocument):
+        embedded_foo = mongo.StringField()
+        embedded_created = mongo.DateTimeField()
+        embedded_email = mongo.EmailField()
+
     class DummyModel(mongo.Document):
         foo = mongo.StringField()
         created = mongo.DateTimeField()
@@ -21,6 +26,7 @@ def mongo_document():
         favorites = mongo.ListField()
         price = mongo.DecimalField(min_value=Decimal(6), max_value=Decimal(10))
         byte = mongo.BinaryField(max_bytes=85)
+        embedded_things = mongo.EmbeddedDocumentField(DummyEmbeddedDoc)
 
     return DummyModel
 
@@ -51,7 +57,7 @@ def test_string_field_mixture(mixture_data):
 
 
 def test_objectid_field_mixture(mixture_data):
-    assert int(mixture_data['id'])
+    assert mixture_data['id'] is None
 
 
 def test_datetime_field_mixture(mixture_data):
@@ -90,3 +96,14 @@ def test_binary_field_mixture(mixture_data):
     byte = mixture_data['byte']
     assert isinstance(byte, basestring)
     assert len(byte) == 85
+
+
+def test_embedded_document_field(mixture_data):
+    emb_doc = mixture_data['embedded_things']
+    assert len(emb_doc.keys()) == 3
+    assert 'embedded_foo' in emb_doc
+
+
+def test_objectid_field(mixture_data):
+    document_id = mixture_data['id']
+    assert document_id is None

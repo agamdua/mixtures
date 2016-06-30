@@ -92,6 +92,13 @@ class FieldHelperMixin(StringFieldMixin):
 
 class FieldValue(FieldHelperMixin):
     @classmethod
+    def make_objectid_field_value(cls, field):
+        """
+        Defering this to mongoengine while saving
+        """
+        return None
+
+    @classmethod
     def make_string_field_value(cls, field):
         """
         String Field has three constraints (apart from anything
@@ -112,10 +119,6 @@ class FieldValue(FieldHelperMixin):
         return cls.get_random_string(string_range)
 
     @classmethod
-    def make_objectid_field_value(cls, field):
-        return six.text_type(random.randint(1, 10000))
-
-    @classmethod
     def make_email_field_value(cls, field):
         length = cls.get_string_length(field)
         range_length = length - 12  # 12 is the length of "@example.com"
@@ -126,7 +129,7 @@ class FieldValue(FieldHelperMixin):
 
     @classmethod
     def make_datetime_field_value(cls, field):
-        return six.text_type(datetime.now())
+        return datetime.now()
 
     @classmethod
     def make_boolean_field_value(cls, field):
@@ -171,3 +174,9 @@ class FieldValue(FieldHelperMixin):
             stop = MAX_LENGTH
 
         return cls.get_random_string(range(stop))
+
+    @classmethod
+    def make_embeddeddocument_field_value(cls, field):
+        fields_for_random_values = field.document_type._fields
+        from mixtures import get_random_values
+        return get_random_values(fields_for_random_values)
