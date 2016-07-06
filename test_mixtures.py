@@ -10,7 +10,7 @@ from mixtures import make_fixture
 @pytest.fixture(scope="module")
 def mongo_document():
     class DummyEmbeddedDoc(mongo.EmbeddedDocument):
-        embedded_foo = mongo.StringField()
+        embedded_foo = mongo.StringField(default='foo')
         embedded_created = mongo.DateTimeField()
         embedded_email = mongo.EmailField()
 
@@ -23,10 +23,11 @@ def mongo_document():
         flag = mongo.BooleanField()
         age = mongo.IntField(min_value=5, max_value=35)
         daily_ice_cream_capacity = mongo.IntField()
-        favorites = mongo.ListField()
+        favorites = mongo.ListField(mongo.StringField(max_length=50))
         price = mongo.DecimalField(min_value=Decimal(6), max_value=Decimal(10))
         byte = mongo.BinaryField(max_bytes=85)
         embedded_things = mongo.EmbeddedDocumentField(DummyEmbeddedDoc)
+        flavors = mongo.StringField(choices=['chocolate', 'vanilla', 'strawberry'])
 
     return DummyModel
 
@@ -101,7 +102,7 @@ def test_binary_field_mixture(mixture_data):
 def test_embedded_document_field(mixture_data):
     emb_doc = mixture_data['embedded_things']
     assert len(emb_doc.keys()) == 3
-    assert 'embedded_foo' in emb_doc
+    assert emb_doc['embedded_foo'] == 'foo'
 
 
 def test_objectid_field(mixture_data):
