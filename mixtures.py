@@ -68,7 +68,7 @@ def get_fields(model_class):
     """
     return [
         attr for attr, value in model_class.__dict__.items()
-        if issubclass(type(value), (mongo.base.BaseField, mongo.EmbeddedDocumentField))
+        if issubclass(type(value), (mongo.base.BaseField, mongo.EmbeddedDocumentField))  # noqa
     ]
 
 

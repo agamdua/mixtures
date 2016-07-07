@@ -1,7 +1,6 @@
 from __future__ import unicode_literals
 
 import random
-import six
 
 from collections import namedtuple
 from datetime import datetime

@@ -27,7 +27,7 @@ def mongo_document():
         price = mongo.DecimalField(min_value=Decimal(6), max_value=Decimal(10))
         byte = mongo.BinaryField(max_bytes=85)
         embedded_things = mongo.EmbeddedDocumentField(DummyEmbeddedDoc)
-        flavors = mongo.StringField(choices=['chocolate', 'vanilla', 'strawberry'])
+        flavors = mongo.StringField(choices=['chocolate', 'vanilla', 'strawberry'])  # noqa
 
     return DummyModel
 
@@ -97,6 +97,7 @@ def test_binary_field_mixture(mixture_data):
     byte = mixture_data['byte']
     assert isinstance(byte, basestring)
     assert len(byte) == 85
+
 
 def test_embedded_document_field(mixture_data):
     emb_doc = mixture_data['embedded_things']
