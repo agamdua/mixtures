@@ -29,6 +29,15 @@ def get_random_value(field):
             object
     """
     func = get_factory_func(field)
+
+    if field.default is not None:
+        if callable(field.default):
+            return field.default()
+        return field.default
+
+    if field.choices:
+        return random.choice(field.choices)
+
     return func(field)
 
 
@@ -92,6 +101,13 @@ class FieldHelperMixin(StringFieldMixin):
 
 class FieldValue(FieldHelperMixin):
     @classmethod
+    def make_objectid_field_value(cls, field):
+        """
+        Defering this to mongoengine while saving
+        """
+        return None
+
+    @classmethod
     def make_string_field_value(cls, field):
         """
         String Field has three constraints (apart from anything
@@ -112,10 +128,6 @@ class FieldValue(FieldHelperMixin):
         return cls.get_random_string(string_range)
 
     @classmethod
-    def make_objectid_field_value(cls, field):
-        return six.text_type(random.randint(1, 10000))
-
-    @classmethod
     def make_email_field_value(cls, field):
         length = cls.get_string_length(field)
         range_length = length - 12  # 12 is the length of "@example.com"
@@ -126,7 +138,7 @@ class FieldValue(FieldHelperMixin):
 
     @classmethod
     def make_datetime_field_value(cls, field):
-        return six.text_type(datetime.now())
+        return datetime.now()
 
     @classmethod
     def make_boolean_field_value(cls, field):
@@ -157,7 +169,11 @@ class FieldValue(FieldHelperMixin):
             applied in case there's a good reason this is not done
             during creation of the object in memory.
         """
-        return []
+        pass
+
+    @classmethod
+    def make_dict_field_value(cls, field):
+        return {'what': 'foo'}
 
     @classmethod
     def make_decimal_field_value(cls, field):
@@ -171,3 +187,14 @@ class FieldValue(FieldHelperMixin):
             stop = MAX_LENGTH
 
         return cls.get_random_string(range(stop))
+
+    @classmethod
+    def make_embeddeddocument_field_value(cls, field):
+        fields_for_random_values = field.document_type._fields
+
+        fixtures = {}
+
+        for field_name, field in fields_for_random_values.items():
+            fixtures[field_name] = get_random_value(field)
+
+        return fixtures
