@@ -8,8 +8,7 @@ Mixtures - MongoEngine fixtures
 Super simple fixtures, pass in a model class and mixtures will do the rest
 by generating random data after introspecting the fields in the model class.
 
-Mixtures has been inspired by [model_mommy](https://github.com/vandersonmota/model_mommy)
-for django.
+Mixtures has been inspired by [model_mommy](https://github.com/vandersonmota/model_mommy).
 
 
 * Free software: BSD license
@@ -35,30 +34,20 @@ test_data = make_fixture(MongoModel, overridden_field='custom data')
 ```python
 >>> from pprint import pprint
 >>> pprint(test_data)
-{'created': u'2015-10-25 00:30:51.851405',
- 'email': u'EAWESCHCVBXPJNJQKMDLZIETXVLQIOYQPYAKRWIMBJMGHTRQUZVCSFCFLEAINTXTLAQWTXTTYRRJUMEVHIBWNMYS@example.com',
- 'flag': False,
- 'foo': u'YZYYOEKJSVMHQLZOJKAURWMYWBHFQXYVXJZINGYBBVXPBEFGLYBVJTDKGGVNYQEVUSKJKYNTNERKKQOZLUUINLPDMXHXIYYEIMQY',
- 'id': u'1727',
- 'name': u'HVNFPOUXXFOBFADIORLQPUSFX',
- 'overridden_field': 'custom data'}
+<MongoModel: MongoModel object>
+
+>>> pprint(test_data.__dict__)
+{'_data': {'created': datetime.datetime(2016, 7, 8, 20, 2, 46, 519796),
+           'email': u'WDNGPGOBYDOVTIGHXRFGRQJMUXGTOBMJQFRSLBQMNIHPWZJTKLPYHVCNMJMJWDRETXEHSVZBMMCVHMTMMYJRGWUN@example.com',
+           'flag': True,
+           'foo': u'LRIHPGMMVGPZBAJOWQKIGXLGDRZFEQCBMRRAWMNZWJQAOIUZPWPSBHXRWQEIWWUFXLJPLQJRRUIGIJJGZPFQWHJJRFEOSJEAHDMP',
+           'id': None,
+           'name': u'HQEPPMXRUCRNGRGORCICJOPKQ',
+           'overridden_field': u'custom data'},
+ '_initialised': True}
 ```
-
-Upcoming
---------
-
-* generation of test data as json or model object
-	(at the moment we generate a dict)
-
-* Overriding fields with specifc data - when you do not want random data
-
-* stable API
-
-* Fields: https://github.com/agamdua/mixtures/issues/3
-
-
 
 Status
 ------
 
-Not even alpha, if we are being completely honest
+Releasing alpha now

@@ -3,32 +3,23 @@ from __future__ import unicode_literals
 """
 MongoEngine fixtures
 """
-from functools import partial
-
 import mongoengine as mongo
 
 from field_values import get_random_value
 
 
-def make_fixture(model_class, fixture_type='dict', **kwargs):
+def make_fixture(model_class, **kwargs):
     """
     Take the model_klass and generate a fixure for it
 
     Args:
         model_class (MongoEngine Document): model for which a fixture
             is needed
-        fixture_type (str): specify whether you want:
-            - 'dict'
-            - 'json'
-            - 'model' object
         kwargs (dict): any overrides instead of random values
 
     Returns:
         dict for now, other fixture types are not implemented yet
     """
-    if fixture_type != 'dict':
-        raise NotImplementedError
-
     all_fields = get_fields(model_class)
 
     fields_for_random_generation = map(
@@ -52,10 +43,8 @@ def make_fixture(model_class, fixture_type='dict', **kwargs):
             len(all_fields), len(values)
         )
     )
-    return {k.name: v for k, v in values.items()}
-
-
-make_fixture_dict = partial(make_fixture, fixture_type='dict')
+    data = {k.name: v for k, v in values.items()}
+    return model_class(**data)
 
 
 def get_fields(model_class):

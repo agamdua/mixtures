@@ -101,7 +101,7 @@ def test_binary_field_mixture(mixture_data):
 
 def test_embedded_document_field(mixture_data):
     emb_doc = mixture_data['embedded_things']
-    assert len(emb_doc.keys()) == 3
+    assert len(emb_doc._fields.keys()) == 3
     assert emb_doc['embedded_foo'] == 'foo'
 
 
