@@ -1,6 +1,7 @@
 from __future__ import unicode_literals
 
 import random
+import six
 
 from collections import namedtuple
 from datetime import datetime
@@ -185,7 +186,7 @@ class FieldValue(FieldHelperMixin):
         else:
             stop = MAX_LENGTH
 
-        return cls.get_random_string(range(stop))
+        return six.binary_type(cls.get_random_string(range(stop)))
 
     @classmethod
     def make_embeddeddocument_field_value(cls, field):
