@@ -3,8 +3,7 @@ from decimal import Decimal
 import mongoengine as mongo
 import pytest
 
-import field_values
-from mixtures import make_fixture
+from mixtures import make_fixture, field_values
 
 
 @pytest.fixture(scope="module")
