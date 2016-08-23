@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 here = os.path.dirname(__file__)
 
-__version__ = "0.0.rc1"
+__version__ = "0.0.2"
 __author__ = "Agam Dua"
 
 def read(filename):
