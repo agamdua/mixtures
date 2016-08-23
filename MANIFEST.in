@@ -1,0 +1,4 @@
+include LICENSE.rst
+
+include *.txt
+recursive-include mixtures *
